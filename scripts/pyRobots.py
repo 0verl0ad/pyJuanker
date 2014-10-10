@@ -52,10 +52,8 @@ def findDirectories(urlD, validDirectories):
 
 
 def printRes(urlD, validDirectories):
-    i = 0
-    for d in validDirectories:
+    for i, d in enumerate(validDirectories):
         print(i, ' ->  ' + urlD + d + '         code: ', validDirectories[d])
-        i += 1
 
 
 if __name__ == '__main__':
