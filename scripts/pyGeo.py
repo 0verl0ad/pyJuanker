@@ -1,6 +1,9 @@
 #
 #	Database provided by MaxMind -- http://www.maxmind.com
 #
+#       pyGeo               by @aetsu
+#
+#
 """Usage: pyGeo.py [--ip=IP] [--l=ipList]
 
 Options:
@@ -15,6 +18,7 @@ import os.path
 import gzip
 import pygeoip
 import simplekml
+
 
 def findDb():
     if (os.path.exists('db') is False):
@@ -53,11 +57,13 @@ def getData(ipDir):
     rec = gi.record_by_name(ipDir)
     return rec
 
+
 def readIpList(fName):
     with open(fName, encoding='utf-8') as f:
         fCon = f.read()
     return fCon.split('\n')
-    
+
+
 def main():
     try:
         arguments = docopt.docopt(__doc__)
@@ -84,7 +90,8 @@ def main():
             fCon = readIpList(fName)
             for d in fCon:
                 #m.append([d, getData(d)['longitude'], getData(d)['latitude']])
-                kml.newpoint(name=d, coords=[(getData(d)['longitude'],getData(d)['latitude'])])  # lon, lat, optional height
+                # lon, lat, optional height
+                kml.newpoint(name=d, coords=[(getData(d)['longitude'], getData(d)['latitude'])])
             kml.save("map.kml")
             print()
             print('KML file generated')
