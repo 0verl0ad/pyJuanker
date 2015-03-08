@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# by @aetsu
 import zipfile
 import rarfile
 import optparse
