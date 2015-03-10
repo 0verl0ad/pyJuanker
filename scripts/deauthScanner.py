@@ -9,7 +9,7 @@ from scapy.all import *
 interface = 'mon0'  # monitor interface
 
 
-def captura(p):
+def capture(p):
     """
     Filter only Deauth packets
     """
@@ -22,11 +22,11 @@ def captura(p):
 
 def channel_hopper():
     """
-    Channel hopper
+    To scan all channels
     """
     while True:
         try:
-            channel = random.randrange(1, 13)  # 13 canales legales en europa
+            channel = random.randrange(1, 13)  # 
             os.system("iw dev %s set channel %d" % (interface, channel))
             time.sleep(1)
         except KeyboardInterrupt:
@@ -42,9 +42,10 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 if __name__ == "__main__":
+    # Starts channel_hopper in other process
     p = Process(target=channel_hopper)
     p.start()
-
+    # press CTRL+C to stop the script
     signal.signal(signal.SIGINT, signal_handler)
 
-    sniff(iface=interface, prn=captura)
+    sniff(iface=interface, prn=capture)
