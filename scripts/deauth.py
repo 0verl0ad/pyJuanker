@@ -12,7 +12,7 @@ conf.verb = 0  # hide the scappy output
 
 def signal_handler(signal, frame):
     """
-    Capturres the CTRL+C interruption
+    Captures the CTRL+C interruption
     """
     sys.exit(0)
 

@@ -35,7 +35,7 @@ def channel_hopper():
 
 def signal_handler(signal, frame):
     """
-    Capturres the CTRL+C interruption
+    Captures the CTRL+C interruption
     """
     p.terminate()
     p.join()
