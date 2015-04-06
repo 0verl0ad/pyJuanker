@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # by @aetsu
 import sys
 import os
@@ -7,26 +7,30 @@ from multiprocessing import Process
 from scapy.all import *
 
 interface = 'mon0'  # monitor interface
+aps = []
 
 
-def capture(p):
+def captura(p):
     """
     Filter only Deauth packets
     """
-    if ((p.haslayer(Dot11Deauth))):
-        print(
-            'Sent deauth packet to client %s associated with %s'
-            % (p.addr1, p.addr3)
-        )
+    if ((p.haslayer(Dot11Beacon))):
+        if p[Dot11].addr3 not in aps:
+            aps.append(p[Dot11].addr3)
+            print(
+                "ESSID: %s \t BSSID: %s \t CHANNEL: %d" %
+                (p[Dot11].info, p[Dot11].addr3,
+                    int(ord(p[Dot11Elt:3].info)))
+            )
 
 
 def channel_hopper():
     """
-    To scan all channels
+    Channel hopper
     """
     while True:
         try:
-            channel = random.randrange(1, 13)  # 
+            channel = random.randrange(1, 13)  # 13 canales legales en europa
             os.system("iw dev %s set channel %d" % (interface, channel))
             time.sleep(1)
         except KeyboardInterrupt:
@@ -35,17 +39,16 @@ def channel_hopper():
 
 def signal_handler(signal, frame):
     """
-    Captures the CTRL+C interruption
+    Capturres the CTRL+C interruption
     """
     p.terminate()
     p.join()
     sys.exit(0)
 
 if __name__ == "__main__":
-    # Starts channel_hopper in other process
     p = Process(target=channel_hopper)
     p.start()
-    # press CTRL+C to stop the script
+
     signal.signal(signal.SIGINT, signal_handler)
 
-    sniff(iface=interface, prn=capture)
+    sniff(iface=interface, prn=captura)
