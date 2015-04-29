@@ -7,21 +7,15 @@ from multiprocessing import Process
 from scapy.all import *
 
 interface = 'mon0'  # monitor interface
-aps = []
 
 
 def captura(p):
     """
-    Filter only Deauth packets
+    Filter only probeRequest packets
     """
-    if ((p.haslayer(Dot11Beacon))):
-        if p[Dot11].addr3 not in aps:
-            aps.append(p[Dot11].addr3)
-            print(
-                "ESSID: %s \t BSSID: %s \t CHANNEL: %d" %
-                (p[Dot11].info, p[Dot11].addr3,
-                    int(ord(p[Dot11Elt:3].info)))
-            )
+    if ((p.haslayer(Dot11ProbeReq))):
+        if p[Dot11].info is not '':
+            print(p[Dot11].addr2 + ' -> ' + p[Dot11].info)
 
 
 def channel_hopper():
