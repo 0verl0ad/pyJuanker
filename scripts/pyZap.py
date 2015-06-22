@@ -142,11 +142,6 @@ class ZapScanner:
         '''
         ZAP Spider
         '''
-        '''
-        sesion_data = {'Session 0': [{'security': 'low', 'PHPSESSID': 'u8kvhj9acq6krk6l2q76bsst21'}]}
-        self.zap.httpsessions.create_empty_session(self.target, sesion_data)
-        print(self.zap.httpsessions.sessions(self.target))
-        '''
         print(
             chr(27) + "[1;36m" + '[->>]' + chr(27) + "[0m" +
             '  Spidering target %s' % self.target
