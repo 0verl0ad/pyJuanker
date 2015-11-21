@@ -50,7 +50,7 @@ try:
             res = br.submit()
             content = res.read()
 
-            if '<script>alert(1);</script>' in content:
+            if payload in content:
                 print "The form:"
                 print f
                 print "is possibly vulnerable!"
