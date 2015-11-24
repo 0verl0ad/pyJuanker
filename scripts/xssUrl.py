@@ -32,7 +32,6 @@ for payload in payloads:
 
     try:
         req = requests.get(newurl, params=parameters)
-        print req.text
         if payload in req.text:
             print "The url " + url
             print "is possibly vulnerable!"
