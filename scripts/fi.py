@@ -35,7 +35,6 @@ def getUrls(tarurl):
 def findLfi(urls, payloads):
     for url in urls:
 
-        # finding xss in url
         parsed = urlparse.urlparse(url)
         parameters = urlparse.parse_qs(parsed.query)
         newurl = urlparse.urljoin((parsed.scheme + "://" + parsed.netloc), parsed.path)
