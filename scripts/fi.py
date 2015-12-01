@@ -32,7 +32,7 @@ def getUrls(tarurl):
     return urls
 
 
-def findLfi(urls, payloads):
+def findFi(urls, payloads):
     for url in urls:
 
         parsed = urlparse.urlparse(url)
@@ -82,7 +82,7 @@ def main():
         payloads = [line.rstrip('\n') for line in open(filename)]
 
     urls = getUrls(sys.argv[1])
-    findLfi(urls, payloads)
+    findFi(urls, payloads)
 
 
 if __name__ == "__main__":
