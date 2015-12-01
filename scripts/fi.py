@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # by @aetsu
 #
-# Use: fi.py url <payloads dictionary>
+# Use: fi.py url
 #
 import re
 import urlparse
@@ -75,12 +75,9 @@ def main():
     print ""
     print "                                                     by @aetsu"
     print ""
-    if len(sys.argv) < 3:
-        payloads = ['../../../../../../../../../../../../../../../../../../../etc/group', 'http://www.google.es/humans.txt']
-    else:
-        filename = sys.argv[2]
-        payloads = [line.rstrip('\n') for line in open(filename)]
 
+    payloads = ['../../../../../../../../../../../../../../../../../../../etc/group', 'http://www.google.es/humans.txt']
+    
     urls = getUrls(sys.argv[1])
     findFi(urls, payloads)
 
