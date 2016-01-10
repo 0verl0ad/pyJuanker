@@ -1,6 +1,13 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+
+##########################################
 # by @aetsu
+# last update 11-01-2016
+# tested on ZAP Weekly D-2015-12-29
+# API version v2.4 0.0.7 (2015-12-10)
+##########################################
+
 
 import os
 import sqlite3
@@ -36,8 +43,8 @@ class DataB:
         else:
             print('')
             print(
-                chr(27) + "[1;31m" + "[+] Error, can't open database   :(   "
-                + chr(27) + "[0m"
+                chr(27) + "[1;31m" + "[+] Error, can't open database   :(   " +
+                chr(27) + "[0m"
             )
             print('')
             sys.exit()
@@ -116,15 +123,16 @@ class ZapScanner:
     '''
     A class to interact with ZAP
     '''
-    def __init__(self, url, dbname):
+    def __init__(self, url, dbname, apik):
         self.data = []
         # If ZAP is not listening on 8090
-        # self.zap = ZAPv2(proxies={'http': 'http://127.0.0.1:8090',
+        # self.zap = ZAPv2(proxies={'http': 'http://127.0.0.1:8080',
         #   'https': 'http://127.0.0.1:8090'})
         self.zap = ZAPv2()
-        self.zap.core.new_session(overwrite='yes')
+        self.zap.core.new_session(overwrite='yes', apikey=apik)
         self.target = url
         self.db = DataB(dbname)
+        self.apik = apik
 
     def z_openUrl(self):
         '''
@@ -146,10 +154,12 @@ class ZapScanner:
             chr(27) + "[1;36m" + '[->>]' + chr(27) + "[0m" +
             '  Spidering target %s' % self.target
         )
-        self.zap.spider.scan(self.target)
+        self.zap.spider.scan(self.target, apikey=self.apik)
         # Give the Spider a chance to start
         time.sleep(2)
+        '''
         first = ''
+
         while (int(self.zap.spider.status()) < 100):
             if first != self.zap.spider.status():
                 print(
@@ -158,6 +168,7 @@ class ZapScanner:
                 )
             first = self.zap.spider.status()
             time.sleep(2)
+        '''
         print(
             chr(27) + "[1;36m" + '[<<-]' +
             chr(27) + "[0m" + '  Spider completed'
@@ -173,7 +184,7 @@ class ZapScanner:
             chr(27) + "[1;36m" + '[->>]' + chr(27) + "[0m" +
             '  AjaxSpider target %s' % self.target
         )
-        self.zap.ajaxSpider.scan(self.target)
+        self.zap.ajaxSpider.scan(self.target, apikey=self.apik)
         # Give the ajaxSpider a chance to start
         time.sleep(5)
 
@@ -185,13 +196,14 @@ class ZapScanner:
             chr(27) + "[1;36m" + '[->>]' + chr(27) + "[0m" +
             '  Scanning target %s' % self.target
         )
-        self.zap.ascan.scan(self.target)
+        self.zap.ascan.scan(self.target, apikey=self.apik)
+        '''
         while (self.zap.ascan.status() < 100):
             print(
                 '         Scan progress: ' + str(self.zap.ascan.status()) + '%'
             )
-            time.sleep(2)
-
+        '''
+        time.sleep(2)
         print(
             chr(27) + "[1;36m" + '[<<-]' + chr(27) + "[0m" + '  Scan completed'
         )
@@ -285,17 +297,25 @@ class ZapScanner:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='  ZapScript')
+    parser = argparse.ArgumentParser(description='  pyZap')
     parser.add_argument("-u", dest="url", help="url to scan")
     parser.add_argument("-d", dest="db", help="database name")
+    parser.add_argument("-a", dest="api", help="ZAP api key (needs to start)")
     parser.add_argument("-daemon", dest="daemon",
                         action='store_true', help="starts zap as a daemon")
 
     params = parser.parse_args()
 
+    if not params.api:
+        parser.print_help()
+        sys.exit()
+    else:
+        apik = params.api
+
     target = str(params.url)
     if not params.url:
         parser.print_help()
+        sys.exit()
     elif target.find('http') == -1:
         target = 'http://' + target
 
@@ -310,7 +330,7 @@ def main():
         print('Waiting for ZAP...')
         time.sleep(20)
 
-    z = ZapScanner(target, dbname)
+    z = ZapScanner(target, dbname, apik)
     print(
         chr(27) + "[1;36m" + '[Target -> ' + target + ']' + chr(27) + "[0m"
     )
