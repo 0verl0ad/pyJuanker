@@ -325,7 +325,8 @@ def main():
         dbname = str(params.db)
 
     if params.daemon:
-        zapPath = '/home/alpha/ZAP_2.4.0/zap.sh'
+        # needs to change to your zap path
+        zapPath = 'ZAP_2.4.3/zap.sh'
         subprocess.Popen([zapPath, '-daemon'], stdout=open(os.devnull, 'w'))
         print('Waiting for ZAP...')
         time.sleep(20)
